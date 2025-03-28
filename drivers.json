@@ -1,6 +1,7 @@
 {
     "drivers": [
         {
+            "abbreviation": "HAM",
             "name": "Lewis Hamilton",
             "age": 36,
             "team": "Ferrari",
@@ -11,6 +12,7 @@
             "GPs Entered": 358
         },
         {
+            "abbreviation": "VER",
             "name": "Max Verstappen",
             "age": 28,
             "team": "Red Bull Racing",
@@ -21,6 +23,7 @@
             "GPs Entered": 211
         },
         {
+            "abbreviation": "NOR",
             "name": "Lando Norris",
             "age": 26,
             "team": "McLaren",
@@ -31,6 +34,7 @@
             "GPs Entered": 130
         },
         {
+            "abbreviation": "RUS",
             "name": "George Russell",
             "age": 27,
             "team": "Mercedes",
@@ -41,6 +45,7 @@
             "GPs Entered": 130
         },
         {
+            "abbreviation": "PIA",
             "name": "Oscar Piastri",
             "age": 24,
             "team": "McLaren",
@@ -51,6 +56,7 @@
             "GPs Entered": 48
         },
         {
+            "abbreviation": "ANT",
             "name": "Kimi Antonelli",
             "age": 19,
             "team": "Mercedes",
@@ -61,6 +67,7 @@
             "GPs Entered": 2
         },
         {
+            "abbreviation": "ALB",
             "name": "Alexander Albon",
             "age": 29,
             "team": "Williams",
@@ -71,6 +78,7 @@
             "GPs Entered": 106
         },
         {
+            "abbreviation": "OCO",
             "name": "Estebon Ocon",
             "age": 29,
             "team": "Haas",
@@ -81,6 +89,7 @@
             "GPs Entered": 158
         },
         {
+            "abbreviation": "STR",
             "name": "Lanse Stroll",
             "age": 28,
             "team": "Astom Martin",
@@ -91,6 +100,7 @@
             "GPs Entered": 168
         },
         {
+            "abbreviation": "NOR",
             "name": "Lando Norris",
             "age": 26,
             "team": "McLaren",
@@ -101,6 +111,7 @@
             "GPs Entered": 130
         },
         {
+            "abbreviation": "LEC",
             "name": "Charles Leclerc",
             "age": 28,
             "team": "Ferrari",
@@ -111,6 +122,7 @@
             "GPs Entered": 149
         },
         {
+            "abbreviation": "HUL",
             "name": "Nico Hulkenberg",
             "age": 36,
             "team": "Kick Sauber",
@@ -121,6 +133,7 @@
             "GPs Entered": 229
         },
         {
+            "abbreviation": "BEA",
             "name": "Oliver Bearman",
             "age": 20,
             "team": "Haas",
@@ -131,6 +144,7 @@
             "GPs Entered": 5
         },
         {
+            "abbreviation": "TSU",
             "name": "Yuki Tsunoda",
             "age": 25,
             "team": "Racing Bulls",
@@ -141,6 +155,7 @@
             "GPs Entered": 89
         },
         {
+            "abbreviation": "SAI",
             "name": "Carlos Sainz",
             "age": 31,
             "team": "Williams",
@@ -151,6 +166,7 @@
             "GPs Entered": 208
         },
         {
+            "abbreviation": "HAD",
             "name": "Issac Hadjar",
             "age": 21,
             "team": "Racing Bulls",
@@ -161,6 +177,7 @@
             "GPs Entered": 2
         },
         {
+            "abbreviation": "GAS",
             "name": "Pierre Gasly",
             "age": 29,
             "team": "Alpine",
@@ -171,6 +188,7 @@
             "GPs Entered": 155
         },
         {
+            "abbreviation": "LAW",
             "name": "Liam Lawson",
             "age": 23,
             "team": "Red Bull Racing",
@@ -181,6 +199,7 @@
             "GPs Entered": 13
         },
         {
+            "abbreviation": "DOO",
             "name": "Jack Doohan",
             "age": 22,
             "team": "Alpine",
@@ -191,6 +210,7 @@
             "GPs Entered": 3
         },
         {
+            "abbreviation": "BOR",
             "name": "Gabriel Bortoleto",
             "age": 21,
             "team": "Kick Sauber",
@@ -201,6 +221,7 @@
             "GPs Entered": 2
         },
         {
+            "abbreviation": "ALO",
             "name": "Lando Norris",
             "age": 44,
             "team": "Astom Martin",
@@ -209,6 +230,83 @@
             "podiums": 106,
             "DHL Fastest Lap": 26,
             "GPs Entered": 405
+        },
+        {
+            "abbreviation": "RIC",
+            "name": "Daniel Ricciardo",
+            "age": 35,
+            "team": "Racing Bulls",
+            "dateOfBirth": "1989-11-13",
+            "nationality": "Australian",
+            "podiums": 32,
+            "DHL Fastest Lap": 17,
+            "GPs Entered": 257
+        },
+        {
+            "abbreviation": "PER",
+            "name": "Sergio Perez",
+            "age": 35,
+            "team": "Red Bull Racing",
+            "dateOfBirth": "1990-11-13",
+            "nationality": "Mexican",
+            "podiums": 39,
+            "DHL Fastest Lap": 12,
+            "GPs Entered": 281
+        },
+        {
+            "abbreviation": "BOT",
+            "name": "Valtteri Bottas",
+            "age": 36,
+            "team": "Kick Sauber",
+            "dateOfBirth": "1989-11-13",
+            "nationality": "Finnish",
+            "podiums": 67,
+            "DHL Fastest Lap": 14,
+            "GPs Entered": 246
+        },
+        {
+            "abbreviation": "NOR",
+            "name": "Lando Norris",
+            "age": 26,
+            "team": "McLaren",
+            "dateOfBirth": "1999-11-13",
+            "nationality": "British",
+            "podiums": 28,
+            "DHL Fastest Lap": 14,
+            "GPs Entered": 130
+        },
+        {
+            "abbreviation": "MAG",
+            "name": "Kevin Magnussen",
+            "age": 33,
+            "team": "Williams",
+            "dateOfBirth": "1992-10-05",
+            "nationality": "Danish",
+            "podiums": 1,
+            "DHL Fastest Lap": 2,
+            "GPs Entered": 188
+        },
+        {
+            "abbreviation": "ZHO",
+            "name": "Guanyu Zhou",
+            "age": 29,
+            "team": "Kick Sauber",
+            "dateOfBirth": "1999-05-30",
+            "nationality": "Chinese",
+            "podiums": 0,
+            "DHL Fastest Lap": 1,
+            "GPs Entered": 82
+        },
+        {
+            "abbreviation": "SCH",
+            "name": "Mick Schumacher",
+            "age": 27,
+            "team": "Alpine",
+            "dateOfBirth": "1999-03-22",
+            "nationality": "German",
+            "podiums": 0,
+            "DHL Fastest Lap": 1,
+            "GPs Entered": 43
         }
     ],
     "lastUpdated": "2025-03-28"
