@@ -29,7 +29,13 @@ drivers = {"HAM": 0,
           "ERI": 28,
           "KVY": 29,
           "GIO": 30,
-          "PIA": 31}
+          "PIA": 31,
+          "ANT": 32,
+          "BEA": 33,
+          "BOR": 34,
+          "HAD": 35,
+          "DOO": 36,
+          "LAW": 37}
 
 teams = {"Mercedes": 0,
          "Red Bull": 1,
@@ -48,7 +54,8 @@ teams = {"Mercedes": 0,
          'Racing Point': 14,
          'Haas F1 Team': 15,
          'Alfa Romeo Racing': 16,
-         'AlphaTauri': 17,}
+         'AlphaTauri': 17,
+         'Kick Sauber': 18}
 
 compounds = {
     'SOFT' : 0,
