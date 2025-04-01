@@ -28,7 +28,8 @@ drivers = {"HAM": 0,
           "KUB": 27,
           "ERI": 28,
           "KVY": 29,
-          "GIO": 30,}
+          "GIO": 30,
+          "PIA": 31}
 
 teams = {"Mercedes": 0,
          "Red Bull": 1,

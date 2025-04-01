@@ -307,7 +307,19 @@
             "podiums": 0,
             "DHL Fastest Lap": 1,
             "GPs Entered": 43
+        },
+        {
+            "abbreviation": "SAR",
+            "name": "Logan Sargeant",
+            "age": 24,
+            "team": "Williams",
+            "dateOfBirth": "1999-03-22",
+            "nationality": "American",
+            "podiums": 0,
+            "DHL Fastest Lap": 0,
+            "GPs Entered": 37
         }
+        
     ],
     "lastUpdated": "2025-03-28"
 }
