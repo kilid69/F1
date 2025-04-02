@@ -1,6 +1,7 @@
 """This module contains helper functions for the main script."""
 
 import os
+import json
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -40,8 +41,10 @@ def get_session_results(session):
     session_results['CountryCode'] = session.event.Country
     # get Location
     session_results['Location'] = session.event.Location
+    # get year
+    session_results['Year'] = session.date.year
     # rename some columns
-    session_results.columns = ['Driver', 'TeamId', 'Country', 'FinalPosition', 'GridPosition', 'RaceTimeDiff', 'Points', 'Retired', 'Location']
+    session_results.columns = ['Driver', 'TeamId', 'Country', 'FinalPosition', 'GridPosition', 'RaceTimeDiff', 'Points', 'Retired', 'Location', 'Year']
 
     return session_results
 
@@ -224,3 +227,30 @@ def calculate_session_laps_final(session:object, session_laps:pd.DataFrame):
         session_laps_final = pd.concat([session_laps_final, driver_laps], ignore_index=True) if not session_laps_final.empty else driver_laps.copy()
 
     return session_laps_final
+
+def add_static_info(session_results:pd.DataFrame):
+    # import drivers.json as dictionary
+    
+    with open('drivers.json') as f:
+        drivers = json.load(f)
+
+    # Add age of the driver, exprience and achievements to the session results
+    for drv in session_results['Driver'].unique():
+        # get the driver data from the json
+        driver_info = next((driver for driver in drivers['drivers'] if driver['abbreviation'] == drv), None)
+
+        if driver_info is None:
+            continue
+        
+        session_results.loc[session_results['Driver'] == drv, 'Age'] = driver_info['age']
+        session_results.loc[session_results['Driver'] == drv , 'Exprience'] = driver_info['GPs Entered']
+        session_results.loc[session_results['Driver'] == drv , 'Achievements'] = driver_info['podiums']
+        session_results.loc[session_results['Driver'] == drv , 'AchievementsByTime'] = driver_info['podiums'] / driver_info['GPs Entered']
+
+    # map driver names to the driver id
+    session_results['Driver'] = session_results['Driver'].map(mappings.drivers)
+
+    # we have to drop points, RacetimeDif and Retired column because it will leak the result to the model
+    session_results.drop(columns=['Points', 'RaceTimeDiff', 'Retired'], inplace=True)
+
+    return session_results

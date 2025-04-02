@@ -35,7 +35,13 @@ drivers = {"HAM": 0,
           "BOR": 34,
           "HAD": 35,
           "DOO": 36,
-          "LAW": 37}
+          "LAW": 37,
+          "FIT": 38,
+          "AIT": 39,
+          "MSC": 40,
+          "MAZ": 41,
+          "SAR": 42,
+          "COL": 43}
 
 teams = {"Mercedes": 0,
          "Red Bull": 1,

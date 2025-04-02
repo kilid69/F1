@@ -4,16 +4,19 @@ import fastf1 as ff1
 import time
 import helpers
 from tqdm import tqdm
+import logging
+
+# Suppress FastF1 logging messages
+logging.getLogger('fastf1').setLevel(logging.WARNING)
 
 # years
-years = [2018, 2019, 2020, 2021, 2022, 2023, 2024]
+years = [2024]
 # Race sessions
 sessions = ['R']
 
-# empty dataframe to store the all seasons and all sessions data
-final_data = pd.DataFrame()
-
 for year in tqdm(years):
+    # empty dataframe to store the all seasons and all sessions data
+    final_data = pd.DataFrame()
 
     for s in sessions:
         # the count of tracks in each year is not over 24
@@ -41,17 +44,24 @@ for year in tqdm(years):
             if session_laps_final.empty:
                 print(f"Session laps data is empty for year {year}, track {track}")
                 continue
-            final_data = pd.concat([final_data, session_laps_final], ignore_index=True) if not final_data.empty else session_laps_final.copy()
             
+            session_results = helpers.add_static_info(session_results)
+            # join the session laps result with driver info and final results
+            session_laps_final_with_result = pd.merge(session_laps_final, session_results, on='Driver', how='left')
+
+            print(session_laps_final_with_result.head(2))
+
+            final_data = pd.concat([final_data, session_laps_final_with_result], ignore_index=True) if not final_data.empty else session_laps_final_with_result.copy()
+
             print(" ----- Data loaded ---- ")
             print(f" ----- Year: {year}, Track: {track}, Session: {session.event.Location} loaded ----")
             ff1.Cache.clear_cache()
             print(" ----- Cache cleared ---- ")
             # Sleep for a while to avoid overloading the server
             time.sleep(5)
-            
-    # backup export until the full data is ready
+    
+    print("\n")
+    print(f" ----- Year: {year} data loaded ----")
+    print("\n\n\n\n")
+    # backup export each year
     final_data.to_csv(f"final_data_{year}.csv", index=False)
-
-# Save the data to a CSV file
-final_data.to_csv("final_data.csv", index=False)
