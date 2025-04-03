@@ -100,17 +100,6 @@
             "GPs Entered": 168
         },
         {
-            "abbreviation": "NOR",
-            "name": "Lando Norris",
-            "age": 26,
-            "team": "McLaren",
-            "dateOfBirth": "1999-11-13",
-            "nationality": "British",
-            "podiums": 28,
-            "DHL Fastest Lap": 14,
-            "GPs Entered": 130
-        },
-        {
             "abbreviation": "LEC",
             "name": "Charles Leclerc",
             "age": 28,
@@ -265,17 +254,6 @@
             "GPs Entered": 246
         },
         {
-            "abbreviation": "NOR",
-            "name": "Lando Norris",
-            "age": 26,
-            "team": "McLaren",
-            "dateOfBirth": "1999-11-13",
-            "nationality": "British",
-            "podiums": 28,
-            "DHL Fastest Lap": 14,
-            "GPs Entered": 130
-        },
-        {
             "abbreviation": "MAG",
             "name": "Kevin Magnussen",
             "age": 33,
@@ -318,8 +296,183 @@
             "podiums": 0,
             "DHL Fastest Lap": 0,
             "GPs Entered": 37
+        },
+        {
+            "abbreviation": "COL",
+            "name": "Franco Colapinto",
+            "age": 21,
+            "team": "Williams",
+            "dateOfBirth": "2003-05-27",
+            "nationality": "Argentine",
+            "podiums": 0,
+            "points":5,
+            "GPs Entered": 9
+        },
+        {
+            "abbreviation": "DEV",
+            "name": "NICK DE VRIES",
+            "age": 30,
+            "team": "Williams",
+            "dateOfBirth": "1995",
+            "nationality": "Dutch",
+            "podiums": 0,
+            "points": 2,
+            "GPs Entered": 11
+        },
+        {
+            "abbreviation": "MAZ",
+            "name": "NIKITA MAZEPIN",
+            "age": 26,
+            "team": "HAAS F1 TEAM",
+            "dateOfBirth": "1999-03-02",
+            "nationality": "Russian",
+            "podiums": 0,
+            "points": 0,
+            "GPs Entered": 10
+        },
+        {
+            "abbreviation": "MSC",
+            "name": "Mick SCHUMACHER",
+            "age": 26,
+            "team": "HAAS F1 TEAM",
+            "dateOfBirth": "1999-03-22",
+            "nationality": "Swiss",
+            "podiums": 0,
+            "points": 12,
+            "GPs Entered": 44
+        },
+        {
+            "abbreviation": "AIT",
+            "name": "JACK AITKEN",
+            "age": 29,
+            "team": "Williams",
+            "dateOfBirth": "1995",
+            "nationality": "British",
+            "podiums": 0,
+            "points": 0,
+            "GPs Entered": 1
+        },
+        {
+            "abbreviation": "FIT",
+            "name": "PIERTO FITTIPALDI",
+            "age": 28,
+            "team": "HAAS F1 TEAM",
+            "dateOfBirth": "UNKNOWN",
+            "nationality": "Brazil",
+            "podiums": 0,
+            "points": 0,
+            "GPs Entered": 2
+        },
+        {
+            "abbreviation": "LAT",
+            "name": "NICHOLAS LATIFI",
+            "age": 20,
+            "team": "Williams",
+            "dateOfBirth": "1995",
+            "nationality": "Canadian",
+            "podiums": 0,
+            "points": 9,
+            "GPs Entered": 61
+        },
+        {
+            "abbreviation": "GIO",
+            "name": "ANTONIO GIOVINAZZI",
+            "age": 31,
+            "team": "Alpha Romeo",
+            "dateOfBirth": "1993",
+            "nationality": "Italian",
+            "podiums": 0,
+            "points": 21,
+            "GPs Entered": 62
+        },
+        {
+            "abbreviation": "KUB",
+            "name": "ROBERT KUBICA",
+            "age": 40,
+            "team": "Alpha Romeo",
+            "dateOfBirth": "1984",
+            "nationality": "Polish",
+            "podiums": 12,
+            "points": 274,
+            "GPs Entered": 99
+        },
+        {
+            "abbreviation": "GRO",
+            "name": "ROMAIN GROSJEAN",
+            "age": 38,
+            "team": "Renault",
+            "dateOfBirth": "1986",
+            "nationality": "French",
+            "podiums": 10,
+            "points": 391,
+            "GPs Entered": 181
+        },
+        {
+            "abbreviation": "KVY",
+            "name": "DANIEL KVYAT",
+            "age": 30,
+            "team": "Alpha Tauri",
+            "dateOfBirth": "1986",
+            "nationality": "Russian",
+            "podiums": 3,
+            "points": 202,
+            "GPs Entered": 112
+        },
+        {
+            "abbreviation": "RAI",
+            "name": "KIMI RAIKKONEN",
+            "age": 45,
+            "team": "Alpha Romeo",
+            "dateOfBirth": "1986",
+            "nationality": "Finnish",
+            "podiums": 103,
+            "points": 1873,
+            "GPs Entered": 353
+        },
+        {
+            "abbreviation": "ERI",
+            "name": "MARCUS ERICSSON",
+            "age": 34,
+            "team": "Sauber",
+            "dateOfBirth": "1986",
+            "nationality": "Finnish",
+            "podiums": 0,
+            "points": 18,
+            "GPs Entered": 97
+        },
+        {
+            "abbreviation": "HAR",
+            "name": "BRENDON HARTLEY",
+            "age": 35,
+            "team": "TORO ROSSO",
+            "dateOfBirth": "1986",
+            "nationality": "New Zealand",
+            "podiums": 0,
+            "points": 4,
+            "GPs Entered": 25
+        },
+        {
+            "abbreviation": "SIR",
+            "name": "SERGEY SIROTKIN",
+            "age": 29,
+            "team": "Williams",
+            "dateOfBirth": "1986",
+            "nationality": "New Zealand",
+            "podiums": 0,
+            "points": 1,
+            "GPs Entered": 21
+        },
+        {
+            "abbreviation": "VAN",
+            "name": "STOFFEL VANDOORNE",
+            "age": 33,
+            "team": "McLaren",
+            "dateOfBirth": "1986",
+            "nationality": "Belgian",
+            "podiums": 0,
+            "points": 26,
+            "GPs Entered": 42
         }
-        
     ],
     "lastUpdated": "2025-03-28"
 }
