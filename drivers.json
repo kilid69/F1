@@ -8,7 +8,7 @@
             "dateOfBirth": "1985-01-07",
             "nationality": "British",
             "podiums": 202,
-            "DHL Fastest Lap": 67,
+            "points": 4871,
             "GPs Entered": 358
         },
         {
@@ -19,7 +19,7 @@
             "dateOfBirth": "1997-09-30",
             "nationality": "Dutch",
             "podiums": 113,
-            "DHL Fastest Lap": 33,
+            "points": 3059,
             "GPs Entered": 211
         },
         {
@@ -30,7 +30,7 @@
             "dateOfBirth": "1999-11-13",
             "nationality": "British",
             "podiums": 28,
-            "DHL Fastest Lap": 14,
+            "points": 1051,
             "GPs Entered": 130
         },
         {
@@ -41,7 +41,7 @@
             "dateOfBirth": "1998-02-15",
             "nationality": "British",
             "podiums": 17,
-            "DHL Fastest Lap": 8,
+            "points": 749,
             "GPs Entered": 130
         },
         {
@@ -52,7 +52,7 @@
             "dateOfBirth": "2001-04-06",
             "nationality": "Australian",
             "podiums": 11,
-            "DHL Fastest Lap": 3,
+            "points": 292,
             "GPs Entered": 48
         },
         {
@@ -63,7 +63,7 @@
             "dateOfBirth": "2006-08-25",
             "nationality": "Italian",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 22,
             "GPs Entered": 2
         },
         {
@@ -74,7 +74,7 @@
             "dateOfBirth": "1996-03-23",
             "nationality": "Thai",
             "podiums": 2,
-            "DHL Fastest Lap": 0,
+            "points": 187,
             "GPs Entered": 106
         },
         {
@@ -85,7 +85,7 @@
             "dateOfBirth": "1996-09-17",
             "nationality": "French",
             "podiums": 4,
-            "DHL Fastest Lap": 1,
+            "points": 455,
             "GPs Entered": 158
         },
         {
@@ -96,7 +96,7 @@
             "dateOfBirth": "1998-10-29",
             "nationality": "Canadian",
             "podiums": 3,
-            "DHL Fastest Lap": 0,
+            "points": 302,
             "GPs Entered": 168
         },
         {
@@ -107,7 +107,7 @@
             "dateOfBirth": "1999-11-13",
             "nationality": "Monegasque",
             "podiums": 43,
-            "DHL Fastest Lap": 10,
+            "points": 1438,
             "GPs Entered": 149
         },
         {
@@ -118,7 +118,7 @@
             "dateOfBirth": "1987-08-19",
             "nationality": "German",
             "podiums": 0,
-            "DHL Fastest Lap": 2,
+            "points": 577,
             "GPs Entered": 229
         },
         {
@@ -129,7 +129,7 @@
             "dateOfBirth": "2005-05-08",
             "nationality": "British",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 11,
             "GPs Entered": 5
         },
         {
@@ -140,7 +140,7 @@
             "dateOfBirth": "2000-11-05",
             "nationality": "Japanese",
             "podiums": 0,
-            "DHL Fastest Lap": 1,
+            "points": 94,
             "GPs Entered": 89
         },
         {
@@ -151,7 +151,7 @@
             "dateOfBirth": "1994-09-01",
             "nationality": "Spanish",
             "podiums": 27,
-            "DHL Fastest Lap": 4,
+            "points": 1273,
             "GPs Entered": 208
         },
         {
@@ -162,7 +162,7 @@
             "dateOfBirth": "2004-09-28",
             "nationality": "French",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 1,
             "GPs Entered": 2
         },
         {
@@ -173,7 +173,7 @@
             "dateOfBirth": "1996-11-13",
             "nationality": "French",
             "podiums": 5,
-            "DHL Fastest Lap": 3,
+            "points": 436,
             "GPs Entered": 155
         },
         {
@@ -184,7 +184,7 @@
             "dateOfBirth": "2002-02-11",
             "nationality": "New Zealand",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 0,
             "GPs Entered": 13
         },
         {
@@ -195,7 +195,7 @@
             "dateOfBirth": "2003-01-20",
             "nationality": "Australian",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 1,
             "GPs Entered": 3
         },
         {
@@ -206,7 +206,7 @@
             "dateOfBirth": "2004-10-14",
             "nationality": "Brazilian",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 0,
             "GPs Entered": 2
         },
         {
@@ -217,7 +217,7 @@
             "dateOfBirth": "1981-07-29",
             "nationality": "Spanish",
             "podiums": 106,
-            "DHL Fastest Lap": 26,
+            "points": 2337,
             "GPs Entered": 405
         },
         {
@@ -228,7 +228,7 @@
             "dateOfBirth": "1989-11-13",
             "nationality": "Australian",
             "podiums": 32,
-            "DHL Fastest Lap": 17,
+            "points": 1329,
             "GPs Entered": 257
         },
         {
@@ -239,7 +239,7 @@
             "dateOfBirth": "1990-11-13",
             "nationality": "Mexican",
             "podiums": 39,
-            "DHL Fastest Lap": 12,
+            "points": 1638,
             "GPs Entered": 281
         },
         {
@@ -250,7 +250,7 @@
             "dateOfBirth": "1989-11-13",
             "nationality": "Finnish",
             "podiums": 67,
-            "DHL Fastest Lap": 14,
+            "points": 1797,
             "GPs Entered": 246
         },
         {
@@ -261,7 +261,7 @@
             "dateOfBirth": "1992-10-05",
             "nationality": "Danish",
             "podiums": 1,
-            "DHL Fastest Lap": 2,
+            "points": 202,
             "GPs Entered": 188
         },
         {
@@ -272,7 +272,7 @@
             "dateOfBirth": "1999-05-30",
             "nationality": "Chinese",
             "podiums": 0,
-            "DHL Fastest Lap": 1,
+            "points": 16,
             "GPs Entered": 82
         },
         {
@@ -283,7 +283,7 @@
             "dateOfBirth": "1999-03-22",
             "nationality": "German",
             "podiums": 0,
-            "DHL Fastest Lap": 1,
+            "points": 12,
             "GPs Entered": 43
         },
         {
@@ -294,7 +294,7 @@
             "dateOfBirth": "1999-03-22",
             "nationality": "American",
             "podiums": 0,
-            "DHL Fastest Lap": 0,
+            "points": 1,
             "GPs Entered": 37
         },
         {
@@ -472,7 +472,19 @@
             "podiums": 0,
             "points": 26,
             "GPs Entered": 42
+        },
+        {
+            "abbreviation": "VET",
+            "name": "SEBASTIAN VETTEL",
+            "age": 37,
+            "team": "Red Bull Racing",
+            "dateOfBirth": "1986",
+            "nationality": "German",
+            "podiums": 122,
+            "points": 3098,
+            "GPs Entered": 300
         }
+
     ],
     "lastUpdated": "2025-03-28"
 }
