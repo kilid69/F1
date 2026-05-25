@@ -1,0 +1,35 @@
+# --- Python auto-generated junk (never commit) ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# --- Jupyter notebook checkpoints ---
+.ipynb_checkpoints/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- OS / editor junk ---
+.DS_Store
+
+# --- Secrets / local settings ---
+.env
+
+# --- Generated data files (re-made by running the pipeline) ---
+*.csv
+
+# --- Generated model / scaler files ---
+*.keras
+*.pt
+*.pth
+*.pkl
+
+# --- FastF1 download cache (if it ever lands in the project) ---
+cache/
+*_cache/
+
+# --- Markdown: ignore notes, but keep the project readme ---
+*.md
+!readme.md
