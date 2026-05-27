@@ -23,6 +23,7 @@ Run with:  python pipeline.py
 """
 
 import logging
+import shutil
 import time
 from datetime import datetime
 from pathlib import Path
@@ -57,7 +58,12 @@ FASTF1_CACHE = Path(".fastf1_cache")  # delete this folder by hand after bulk ba
 # make sure output folders exist
 LAPS_DIR.mkdir(parents=True, exist_ok=True)
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-FASTF1_CACHE.mkdir(exist_ok=True)
+
+# wipe any leftovers from previous runs before enabling the cache,
+# so we start each run with a clean .fastf1_cache/ folder
+if FASTF1_CACHE.exists():
+    shutil.rmtree(FASTF1_CACHE)
+FASTF1_CACHE.mkdir()
 ff1.Cache.enable_cache(str(FASTF1_CACHE))
 
 
@@ -117,9 +123,13 @@ def process_event(year: int, session_type: str, event) -> bool:
     per_lap = helpers.build_session_laps(session)
     if per_lap.empty:
         print(f"  -> empty per-lap data for {year} {session_type} {track_name}")
-        ff1.Cache.clear_cache()
+        ff1.Cache.clear_cache(deep=True)
         return False
     results = helpers.get_session_results(session)
+
+    # stamp RoundNumber on both frames so we can order races chronologically later
+    per_lap["RoundNumber"] = round_number
+    results["RoundNumber"] = round_number
 
     # 5. write (atomic — partial writes don't leave half-formed CSVs)
     safe_to_csv(per_lap, laps_path)
@@ -130,7 +140,7 @@ def process_event(year: int, session_type: str, event) -> bool:
     )
 
     # 6. clear the cache so disk only ever holds ONE race's raw data
-    ff1.Cache.clear_cache()
+    ff1.Cache.clear_cache(deep=True)
     return True
 
 
@@ -168,7 +178,7 @@ def main():
                 except Exception as e:
                     # catch-all so one bad race doesn't kill the whole loop
                     print(f"  -> error on {year} {session_type} round {event.get('RoundNumber','?')}: {e}")
-                    ff1.Cache.clear_cache()  # don't leave a partial download on disk
+                    ff1.Cache.clear_cache(deep=True)  # don't leave a partial download on disk
                     continue
 
                 if did_work:

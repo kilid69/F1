@@ -28,4 +28,6 @@ python pipeline.py
 
 Re-run `python pipeline.py` whenever a new race is finished — it will only fetch newly completed races.
 
+**Heads-up for the first historical backfill:** FastF1's API has a 500-calls-per-hour limit, and each race costs ~40 calls, so the pipeline will hit the limit after ~12 races. Just wait ~1 hour and re-run; you'll need several runs spread over the day to pull every season since 2018.
+
 This repository will be updated depending on the free time I have.
