@@ -18,7 +18,7 @@ def convert_time(data, column, fillna_value=None):
     data[column] = data[column].fillna(fillna_value) if fillna_value is not None else data[column]
     return data
 
-def get_session_results(session):
+def get_session_results(session) -> pd.DataFrame:
     """final results for the session
 
     :param object session: session object from fastf1 
@@ -52,7 +52,7 @@ def get_session_results(session):
 
     return session_results
 
-def get_weather_data(session):
+def get_weather_data(session) -> pd.DataFrame:
     """get the weather data for the session
 
     :param object session: session object from fastf1 
@@ -197,7 +197,7 @@ def clean_laps(laps: pd.DataFrame) -> pd.DataFrame:
         (df["IsAccurate"].fillna(False)) &
         (~df["Deleted"].fillna(False)) &
         (~df["FastF1Generated"].fillna(False))
-    ]
+    ].copy()  # explicit copy so subsequent column assignments don't warn
 
     # 2. derive IsPitLap (1 if the car entered OR exited the pit during this lap)
     df["IsPitLap"] = (df["PitInTime"].notna() | df["PitOutTime"].notna()).astype(int)
