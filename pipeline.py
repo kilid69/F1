@@ -47,6 +47,18 @@ YEARS = list(range(2018, datetime.now().year + 1))
 SESSIONS = ["R"]            # "R" = race; "Q", "FP1", "FP2", "FP3" also valid
 SLEEP_BETWEEN = 5           # seconds between sessions — be polite to data servers
 
+# Pre-qualifying pace signals (practice / sprint) go on the results CSV as
+# context that exists BEFORE the grid is set — unlike GridPosition, which we
+# keep as a baseline but which leaks the answer. We always store exactly 3
+# sessions' worth. A driver who set no lap (crash / no run) or a session that
+# never happened falls back to "effectively last / nowhere".
+CONTEXT_SLOTS = 3           # always store 3 pre-quali sessions per weekend
+# fallbacks are set CLEARLY beyond any real lap: real practice pace tops out
+# around 6-7%, and real positions stop at the field size (~20). So 10% / P25
+# means "didn't set a lap" can't be mistaken for "ran, just slow".
+MISSING_POS = 25.0          # no fastest lap -> beyond the real field
+MISSING_PACE = 10.0         # no fastest lap -> 10% off = unambiguously "nowhere"
+
 
 # ----------------------------- folders ---------------------------------------
 
@@ -85,6 +97,122 @@ def safe_to_csv(df, path):
     tmp = path.with_suffix(path.suffix + ".tmp")
     df.to_csv(tmp, index=False)
     tmp.replace(path)
+
+
+def pick_context_sessions(event) -> list[str]:
+    """Choose the (up to) 3 pre-qualifying sessions of a weekend.
+
+    We want pace signals that exist BEFORE the race grid is set, so we take
+    every session that isn't the grid-setting ``Qualifying`` or the ``Race``
+    itself. Across every weekend format this happens to leave exactly three:
+
+        conventional weekend   -> ["Practice 1", "Practice 2", "Practice 3"]
+        sprint weekend (2024+) -> ["Practice 1", "Sprint Qualifying", "Sprint"]
+        sprint weekend (2023)  -> ["Practice 1", "Sprint Shootout", "Sprint"]
+        sprint weekend (21-22) -> ["Practice 1", "Practice 2", "Sprint"]
+
+    Heads-up: in 2021-2023 the Sprint result effectively SET the race grid, so
+    for those few weekends "Sprint" pace is close to a grid leak. We keep it for
+    a consistent 3-slot shape (and GridPosition stays as its own baseline column
+    anyway, so the leak is reproducible/removable later).
+
+    :param event: one row of ``ff1.get_event_schedule`` — a pandas Series with
+        ``Session1`` .. ``Session5`` columns naming each session.
+    """
+    exclude = {"Qualifying", "Race"}
+    names: list[str] = []
+    for i in range(1, 6):
+        name = event.get(f"Session{i}")
+        if pd.notna(name) and str(name) not in exclude:
+            names.append(str(name))
+    return names[:CONTEXT_SLOTS]
+
+
+def session_pace_and_position(year: int, round_number: int, session_name: str) -> dict:
+    """Rank drivers by their single fastest lap in one early session.
+
+    Loads the session WITHOUT telemetry (much cheaper — we only need lap times,
+    not the 100-Hz car data), then turns each driver's best lap into two numbers:
+
+        position : rank by fastest lap, 1 = quickest
+        pace     : how far behind the session's fastest lap, in PERCENT
+                   (percent, not seconds, so short Monaco and long Spa compare
+                   fairly — 0.2s means more at Monaco than at Spa)
+
+    Returns a dict keyed by the 3-letter driver code, e.g. FP3 at Suzuka:
+        {
+          "VER": (1, 0.00),   # set the session's fastest lap -> P1, 0% off
+          "NOR": (2, 0.21),   # 0.21% slower than VER's best
+          "LEC": (3, 0.48),
+        }
+    A driver who set no lap is simply absent (the caller fills the fallback).
+    """
+    sess = ff1.get_session(year, round_number, session_name)
+    sess.load(telemetry=False, weather=False, messages=False)
+
+    laps = sess.laps
+    # drop laps whose time was deleted (track limits) so a bogus-fast lap can't
+    # steal pole; guard in case the column is absent on some older sessions
+    if "Deleted" in laps.columns:
+        laps = laps[laps["Deleted"] != True]
+
+    # each driver's single fastest lap; .min() skips the NaT in/out laps
+    best = laps.groupby("Driver")["LapTime"].min().dropna()
+    if best.empty:
+        return {}
+
+    fastest = best.min()                            # the session's overall best
+    # Timedelta / Timedelta -> plain float ratio, *100 -> percent
+    pace = (best - fastest) / fastest * 100.0       # 0.189s / 89.512s -> 0.21
+    position = best.rank(method="min").astype(int)  # 1 = fastest, ties share rank
+
+    return {drv: (int(position[drv]), float(pace[drv])) for drv in best.index}
+
+
+def add_context_features(results: pd.DataFrame, year: int, round_number: int, event) -> pd.DataFrame:
+    """Attach pre-qualifying pace/position columns onto the race results frame.
+
+    For each of the 3 chosen sessions we add two columns, so every driver row
+    gains six new fields:
+
+        Practice1Pos, Practice1Pace,
+        Practice2Pos, Practice2Pace,
+        Practice3Pos, Practice3Pace
+
+    Concretely a McLaren row might end up:
+        Driver=NOR  Practice1Pos=2  Practice1Pace=0.21  Practice2Pos=1 ...
+
+    A session that doesn't exist, or a driver with no lap, gets the MISSING_*
+    fallback. ``RateLimitExceededError`` is re-raised so ``main`` can stop
+    cleanly; any other per-session error just fills that slot with fallbacks.
+    """
+    session_names = pick_context_sessions(event)
+
+    for i in range(CONTEXT_SLOTS):
+        pos_col = f"Practice{i + 1}Pos"
+        pace_col = f"Practice{i + 1}Pace"
+
+        per_driver: dict = {}
+        if i < len(session_names):
+            try:
+                per_driver = session_pace_and_position(year, round_number, session_names[i])
+            except fastf1.exceptions.RateLimitExceededError:
+                raise  # let main() catch this and stop the whole run cleanly
+            except Exception as e:
+                print(f"     (skipping {session_names[i]} context: {e})")
+
+        # split the (pos, pace) tuples into two driver->value lookups
+        # per_driver = {"VER": (1, 0.00), "NOR": (2, 0.21)} ->
+        #   pos_map  = {"VER": 1,   "NOR": 2}
+        #   pace_map = {"VER": 0.0, "NOR": 0.21}
+        pos_map = {drv: v[0] for drv, v in per_driver.items()}
+        pace_map = {drv: v[1] for drv, v in per_driver.items()}
+
+        # map onto the race's Driver column; drivers not in the map -> fallback
+        results[pos_col] = results["Driver"].map(pos_map).fillna(MISSING_POS)
+        results[pace_col] = results["Driver"].map(pace_map).fillna(MISSING_PACE)
+
+    return results
 
 
 def process_event(year: int, session_type: str, event) -> bool:
@@ -126,6 +254,11 @@ def process_event(year: int, session_type: str, event) -> bool:
         ff1.Cache.clear_cache(deep=True)
         return False
     results = helpers.get_session_results(session)
+
+    # 4b. attach pre-qualifying pace signals (practice / sprint) as context
+    #     columns. these load 3 extra sessions with telemetry OFF, so they're
+    #     cheap; they share this weekend's cache and get wiped with it in step 6.
+    results = add_context_features(results, year, round_number, event)
 
     # stamp RoundNumber on both frames so we can order races chronologically later
     per_lap["RoundNumber"] = round_number
