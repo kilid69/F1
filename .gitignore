@@ -29,6 +29,7 @@ env/
 # --- FastF1 download cache (if it ever lands in the project) ---
 cache/
 *_cache/
+docs/
 
 # --- Markdown: ignore notes, but keep the project readme ---
 *.md
