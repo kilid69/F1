@@ -57,6 +57,17 @@ UPCOMING_CONTEXT_CATEGORICAL: list[str] = [
     "Track",
 ]
 
+# Fallback for a missing upcoming-context value. Only kicks in for a race not
+# yet patched with practice data — a patched race already carries the pipeline's
+# 25/10 fallbacks. 0.0 would be wrong: position 0 = "ahead of pole", pace 0 =
+# "fastest lap", i.e. the OPPOSITE of "nowhere". Mirrors pipeline's MISSING_*.
+UPCOMING_CONTEXT_DEFAULTS: dict[str, float] = {
+    "GridPosition": 20.0,
+    "Practice1Pos": 25.0, "Practice1Pace": 10.0,
+    "Practice2Pos": 25.0, "Practice2Pace": 10.0,
+    "Practice3Pos": 25.0, "Practice3Pace": 10.0,
+}
+
 
 # --- Identity / target ------------------------------------------------------
 DRIVER_ID_COL: str = "Driver"
