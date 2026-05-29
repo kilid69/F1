@@ -13,6 +13,7 @@ unfold back to (B, R, hidden) for the outer LSTM.
 """
 
 import torch.nn as nn
+import torch
 
 from . import config
 
@@ -89,4 +90,45 @@ class F1Net(nn.Module):
             nn.Linear(config.HEAD_HIDDEN, config.NUM_DRIVERS),  # 64 -> 23 (raw logits)
         )
 
+    def forward(self, batch:dict[str, torch.Tensor]):
+        """Wire the data through the layers and return logits.
+
+        :param batch: the dict produced by ``dataset.collate_fn`` (the DataLoader
+            yields it each step). Keys and shapes (B=batch, R=10, L=78, F=37):
+                past_laps_num   (B, R, L, F)
+                past_laps_cat   dict col -> (B, R, L)
+                past_laps_lens  (B, R)
+                upcoming_num    (B, 6)
+                upcoming_cat    {"Track": (B,)}
+        :return: logits, shape (B, NUM_DRIVERS).
+        """
+        # ---- 1. embed + concat the per-lap features ----
+        # For each col in CATEGORICAL_COLS: emb = self.lap_embeddings[col](batch["past_laps_cat"][col])
+        #   ID tensor (B, R, L) -> embedded (B, R, L, emb_dim).
+        # Then torch.cat([numerical, *embeddings], dim=-1) along the feature axis
+        # -> (B, R, L, 54).
+        embs = []
+        for col in config.CATEGORICAL_COLS:
+            embs.append(self.lap_embeddings[col](batch["past_laps_cat"][col]))
+        
+        x = torch.cat([batch["past_laps_num"], *embs], dim=-1)
+
+
+        # ---- 2. fold races into the batch axis, run the INNER LSTM ----
+        # reshape (B, R, L, 54) -> (B*R, L, 54) with .reshape(B*R, L, -1).
+        # (Recommended) nn.utils.rnn.pack_padded_sequence with past_laps_lens
+        # flattened to (B*R,) so the LSTM skips zero-padding. Use
+        # enforce_sorted=False and put lengths on the CPU. Every race has >=1
+        # real lap, so no zero-length sequence to worry about.
+        # Take the final hidden state -> (B*R, 64), then reshape -> (B, R, 64).
+        B, R, L, F = x.shape
+        x = torch.reshape(x, shape=(B*R, L, F))
+        lengths=batch["past_laps_lens"].reshape(B*R,)
+        packed = nn.utils.rnn.pack_padded_sequence(x, 
+                                          lengths=lengths.cpu(), 
+                                          batch_first=True,
+                                          enforce_sorted=False)
+        _, (h_n, _) = self.inner_lstm(packed) # hidden state -> (1, 320, 64)
+        race_vecs = h_n[-1].reshape(B, R, -1)  # h_n[-1] -> (320, 64) then unfold to -> (32, 10, 64)
+        
 

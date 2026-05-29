@@ -316,7 +316,7 @@ class F1Dataset(Dataset):
             # build_datasets; shape (len(UPCOMING_CONTEXT_NUMERICAL),) e.g. (6,)
             "upcoming_num": torch.tensor(s["upcoming_num"], dtype=torch.float32),
             "upcoming_cat": {"Track": torch.tensor(s["track"], dtype=torch.long)},  # () track id
-            "target": torch.tensor(s["target"], dtype=torch.long),  # () the answer, class 0..19
+            "target": torch.tensor(s["target"], dtype=torch.long),  # () the answer, class 0..21
         }
 
 
