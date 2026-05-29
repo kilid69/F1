@@ -25,14 +25,21 @@ def get_session_results(session) -> pd.DataFrame:
     :return pd.DataFrame: final results of the session
     """
     session_results = session.results[['Abbreviation', 'TeamId', 'CountryCode', 'ClassifiedPosition', 'GridPosition', 'Time', 'Points']].copy()
-    # adding a new column called retired and fill it with 0
-    session_results['Retired'] = 0
-    # if ClassifiedPosition is 'R' then the driver retired
-    session_results.loc[session_results['ClassifiedPosition'] == 'R', 'Retired'] = 1
-    # put ClassifiedPosition to 20 if the driver retired
-    session_results.loc[session_results['ClassifiedPosition'] == 'R', 'ClassifiedPosition'] = 20
-    # put ClassifiedPosition to 20 if the driver has DNF
-    session_results.loc[session_results['ClassifiedPosition'] == 'D', 'ClassifiedPosition'] = 20
+    # 'ClassifiedPosition' is FastF1's official classification: a number for a
+    # classified finisher, or a letter code for a non-finisher -- 'R' retired,
+    # 'D' disqualified, 'E' excluded, 'W' withdrawn, 'N'/'F' not classified.
+    # Keep the real number (1..22) and send EVERY non-numeric code to a DNF
+    # sentinel, so a DNF is never confused with a real last-place finish. (The old
+    # "-> 20" did exactly that: it capped 22-car grids and threw away the DNF info.)
+    DNF_SENTINEL = 99   # must match config.DNF_SENTINEL on the model side
+    def _classified_to_pos(cp):
+        try:
+            return int(cp)
+        except (ValueError, TypeError):
+            return DNF_SENTINEL
+    session_results['ClassifiedPosition'] = session_results['ClassifiedPosition'].map(_classified_to_pos)
+    # Retired = 1 for any non-classified driver (now marked with the sentinel)
+    session_results['Retired'] = (session_results['ClassifiedPosition'] == DNF_SENTINEL).astype(int)
     # convert Time column to timedelta with only seconds difference from the first driver
     session_results = convert_time(session_results, 'Time', 200)
     # set the first and biggest number which is the first driver in this column to 0 because only the first driver has 1 hour and 50 minutes
