@@ -9,14 +9,7 @@ Two LSTMs stacked, plus embeddings and a small MLP head:
 The trick that makes the inner LSTM run on all 10 races at once is a reshape:
 the batch arrives as (B, R, L, F) and we fold the race axis into the batch axis
 -> (B*R, L, F). One LSTM call then processes every race of every sample, and we
-unfold back to (B, R, hidden) for the outer LSTM. (You worked this out earlier:
-"we increased one dimension!".)
-
-In PyTorch a model is a class with two methods:
-  __init__  — create the layers (the pieces).
-  forward   — define how data flows through them (the wiring).
-There's no .compile(); the loss and optimizer live in train.py. Don't add a
-softmax — CrossEntropyLoss in train.py wants raw logits.
+unfold back to (B, R, hidden) for the outer LSTM.
 """
 
 import torch.nn as nn
@@ -33,9 +26,8 @@ class F1Net(nn.Module):
     """
 
     def __init__(self):
-        """Create the layers (no data flows yet — that's ``forward``).
-
-        Pieces you'll need, and how they connect:
+        """Creating the Layers.
+        Pieces we'll need, and how they connect:
         """
         super().__init__()
 
