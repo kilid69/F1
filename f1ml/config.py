@@ -74,6 +74,12 @@ DRIVER_ID_COL: str = "Driver"
 RACE_ID_COLS: list[str] = ["Year", "Location"]
 TARGET_COL: str = "FinalPosition"
 
+# In the results CSVs, a driver who did not finish (retired / disqualified /
+# withdrew / not classified) is stored as this sentinel instead of a real
+# finishing position. dataset.py maps it to the dedicated DNF class.
+# (helpers.get_session_results writes it; keep the two values in sync.)
+DNF_SENTINEL: int = 99
+
 
 # =============================================================================
 # 2. EMBEDDING SIZES
@@ -102,7 +108,7 @@ MAX_LAPS_PER_RACE: int = 78       # pad / truncate each race to this many laps
 NUM_PAST_RACES: int = 10          # how many past races to feed per training sample
 
 # --- Output ----------
-NUM_DRIVERS: int = 21             # softmax size: positions 1..20 (+ DNF slot)
+NUM_DRIVERS: int = 23             # output classes: positions 1..22 -> 0..21, + 1 dedicated DNF class (22)
 
 
 # =============================================================================

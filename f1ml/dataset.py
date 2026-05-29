@@ -248,13 +248,17 @@ class F1Dataset(Dataset):
             track = int(row["Track"]) if not pd.isna(row["Track"]) else 0  # e.g. 17
 
             # --- target: the answer the model learns ---
-            # FinalPosition is 1..20; CrossEntropy wants a 0-based class -> subtract 1.
-            # 'W' (withdrew) and other non-numbers are treated as last place.
+            # Real finishes 1..22 -> 0-based classes 0..21 (CrossEntropy wants 0-based).
+            # A DNF is stored as DNF_SENTINEL (99) or is non-numeric ('W'); it goes to
+            # the dedicated last class (NUM_DRIVERS - 1 = 22), NOT a real position.
+            # The value 99 is only a label here — it never enters the network as a
+            # number, so its size doesn't matter (the target isn't a feature).
             pos = pd.to_numeric(row[config.TARGET_COL], errors="coerce")
-            if pd.isna(pos):
-                pos = 20
-            target = int(pos) - 1                    # 1st -> 0, 5th -> 4, ...
-            target = max(0, min(target, config.NUM_DRIVERS - 1))  # clamp into 0..20
+            if pd.isna(pos) or int(pos) >= config.DNF_SENTINEL:
+                target = config.NUM_DRIVERS - 1      # dedicated DNF class (= 22)
+            else:
+                target = int(pos) - 1                # P1 -> 0, P22 -> 21
+            target = max(0, min(target, config.NUM_DRIVERS - 1))  # safety clamp
 
             # store only the KEYS for history (not the lap arrays themselves);
             # __getitem__ looks the arrays up in lap_groups and pads them on demand
