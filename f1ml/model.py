@@ -131,4 +131,20 @@ class F1Net(nn.Module):
         _, (h_n, _) = self.inner_lstm(packed) # hidden state -> (1, 320, 64)
         race_vecs = h_n[-1].reshape(B, R, -1)  # h_n[-1] -> (320, 64) then unfold to -> (32, 10, 64)
         
+        # ---- 3. run the OUTER LSTM over the 10 race_vecs ----
+        # input (B, R, 64) -> final hidden state form_vec (B, 128). No packing.
+        _, (h_n, _) = self.outer_lstm(race_vecs)
+        form_vec = h_n[-1]
 
+        # ---- 4. build the upcoming-context vector ----
+        # track_emb = self.track_embedding(batch["upcoming_cat"]["Track"])  # (B,) -> (B, 6)
+        # concat [form_vec (B,128), upcoming_num (B,6), track_emb (B,6)] -> (B, 140).
+        embs = []
+        for col in config.UPCOMING_CONTEXT_CATEGORICAL:
+            embs.append(self.track_embeddings[col](batch["upcoming_cat"][col]))
+
+        head_input = torch.cat([form_vec, batch["upcoming_num"], *embs], dim=-1)
+
+        # ---- 5. head -> logits ----
+        # self.head(that) -> (B, NUM_DRIVERS). Return it raw (no softmax).
+        return self.head(head_input)
