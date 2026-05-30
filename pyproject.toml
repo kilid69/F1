@@ -5,6 +5,7 @@ requires-python = ">=3.9"
 dependencies = [
     "fastf1>=3.7.0",
     "jupyter>=1.1.1",
+    "mlflow>=3.1.4",
     "numpy>=2.0.2",
     "pandas>=2.3.3",
     "scikit-learn>=1.6.1",
