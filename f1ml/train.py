@@ -13,6 +13,7 @@ Run this file directly to train:  python -m f1ml.train
 
 import pickle
 
+import mlflow
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -179,21 +180,68 @@ def train():
                                  lr=config.LEARNING_RATE,
                                  weight_decay=config.WEIGHT_DECAY)
     
-    # ---- 4. epoch loop ----
-    # track the best model to save it
-    best_val = float("inf")
+    # ---- 4. epoch loop, tracked by MLflow ----
+    # MLflow groups runs under an experiment; start_run() opens ONE run that
+    # records this training's settings, its per-epoch numbers, and its best model.
+    mlflow.set_experiment(config.MLFLOW_EXPERIMENT)
+    with mlflow.start_run():
+        # log the knobs that DEFINE this run, so later you can see which settings
+        # produced which result and compare runs side by side in the MLflow UI.
+        mlflow.log_params({
+            "batch_size": config.BATCH_SIZE,
+            "learning_rate": config.LEARNING_RATE,
+            "weight_decay": config.WEIGHT_DECAY,
+            "dropout": config.DROPOUT,
+            "patience": config.PATIENCE,
+            "num_epochs": config.NUM_EPOCHS,
+            "inner_lstm_hidden": config.INNER_LSTM_HIDDEN,
+            "outer_lstm_hidden": config.OUTER_LSTM_HIDDEN,
+        })
 
-    for epoch in range(config.NUM_EPOCHS):
-        train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
-        val = evaluate(model, val_loader, criterion, device)
-        print(f"epoch {epoch}: train_loss={train_loss:.4f}  "
-              f"val_loss={val['loss']:.4f}  acc={val['acc']:.3f}  top3={val['top3']:.3f}")
-        
-        # checkpoint when val improves (like EarlyStopping/ModelCheckpoint):
-        if val["loss"] < best_val:
-            best_val = val["loss"]
-            torch.save(model.state_dict(), config.CHECKPOINT_PATH)
-            print(f"  ↳ saved (best val_loss so far: {best_val:.4f})")
+        best_val = float("inf")     # lowest val_loss we've seen so far
+        epochs_without_improve = 0  # how many epochs IN A ROW since that best
+
+        for epoch in range(config.NUM_EPOCHS):
+            train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
+            val = evaluate(model, val_loader, criterion, device)
+            print(f"epoch {epoch}: train_loss={train_loss:.4f}  "
+                  f"val_loss={val['loss']:.4f}  acc={val['acc']:.3f}  top3={val['top3']:.3f}")
+
+            # record this epoch's numbers; step=epoch makes MLflow draw a curve
+            # over epochs (so you can SEE train_loss vs val_loss diverge = overfit).
+            mlflow.log_metrics({
+                "train_loss": train_loss,
+                "val_loss": val["loss"],
+                "acc": val["acc"],
+                "top3": val["top3"],
+            }, step=epoch)
+
+            if val["loss"] < best_val:
+                # NEW best: save the weights and reset the patience counter
+                best_val = val["loss"]
+                epochs_without_improve = 0
+                torch.save(model.state_dict(), config.CHECKPOINT_PATH)
+                print(f"  ↳ saved (best val_loss so far: {best_val:.4f})")
+            else:
+                # no improvement this epoch — burn one unit of patience
+                epochs_without_improve += 1
+                if epochs_without_improve >= config.PATIENCE:
+                    # val_loss has stalled for PATIENCE epochs in a row -> stop.
+                    # The best weights are already safe on disk (we only ever save
+                    # on improvement), so stopping here loses nothing.
+                    print(f"early stopping at epoch {epoch}: "
+                          f"no val improvement for {config.PATIENCE} epochs "
+                          f"(best val_loss={best_val:.4f})")
+                    break
+
+        # ---- 5. archive this run's best model + its scalers in MLflow ----
+        # f1_model.pt currently holds the BEST epoch's weights (we only saved on
+        # improvement). Log it + the scalers as artifacts so MLflow keeps a
+        # versioned copy of THIS run, safe even after the next run overwrites the
+        # working-dir files. best_val becomes the run's headline metric.
+        mlflow.log_metric("best_val_loss", best_val)
+        mlflow.log_artifact(config.CHECKPOINT_PATH)
+        mlflow.log_artifact(config.SCALERS_PATH)
 
 
 if __name__ == "__main__":
