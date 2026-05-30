@@ -118,7 +118,7 @@ NUM_DRIVERS: int = 23             # output classes: positions 1..22 -> 0..21, + 
 INNER_LSTM_HIDDEN: int = 64       # size of each race_vec
 OUTER_LSTM_HIDDEN: int = 128      # size of form_vec
 HEAD_HIDDEN: int = 64             # hidden width in the MLP head
-DROPOUT: float = 0.2              # dropout rate inside the head
+DROPOUT: float = 0.3              # dropout rate inside the head (raised 0.2->0.3 to fight overfitting)
 
 
 # =============================================================================
@@ -127,8 +127,14 @@ DROPOUT: float = 0.2              # dropout rate inside the head
 
 BATCH_SIZE: int = 32
 LEARNING_RATE: float = 1e-3
-NUM_EPOCHS: int = 50
-WEIGHT_DECAY: float = 1e-5        # L2 regularization (helps prevent overfit)
+NUM_EPOCHS: int = 50              # an UPPER bound; early stopping usually stops us sooner
+WEIGHT_DECAY: float = 1e-4        # L2 regularization (raised 1e-5->1e-4 to fight overfitting)
+
+# Early stopping: if val_loss does not beat its best for this many epochs IN A
+# ROW, stop training. Your val_loss bottomed at epoch 3 last run, so patience=5
+# would have let it try a few more, confirmed no improvement, then stopped ~epoch 8
+# instead of grinding uselessly to epoch 50.
+PATIENCE: int = 5
 
 
 # =============================================================================
@@ -137,8 +143,15 @@ WEIGHT_DECAY: float = 1e-5        # L2 regularization (helps prevent overfit)
 
 LAPS_DIR: str = "data/laps"
 RESULTS_DIR: str = "data/results"
+
+# These are just STAGING files in the working dir — each run overwrites them,
+# then logs a COPY into MLflow, which keeps its own versioned copy per run
+# (under mlruns/). So the overwrite here is harmless; MLflow is the archive.
 CHECKPOINT_PATH: str = "f1_model.pt"  # PyTorch convention (.pt or .pth)
 SCALERS_PATH: str = "scalers.pkl"     # the fitted StandardScalers — needed at inference
+
+# MLflow groups runs under a named experiment so you can compare them.
+MLFLOW_EXPERIMENT: str = "f1-position"
 
 
 # =============================================================================

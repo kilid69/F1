@@ -267,6 +267,11 @@ class F1Dataset(Dataset):
                 "upcoming_num": up_num,
                 "track": track,
                 "target": target,
+                # identity of the race being predicted — NOT fed to the model,
+                # only used by predict.py to find/label a specific race & driver.
+                "driver": driver,             # driver id (same as past[*][0])
+                "year": target_key[0],        # target race's year, e.g. 2025
+                "round": target_key[1],       # target race's round number, e.g. 5
             })
 
     def __len__(self) -> int:
