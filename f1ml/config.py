@@ -138,3 +138,13 @@ WEIGHT_DECAY: float = 1e-5        # L2 regularization (helps prevent overfit)
 LAPS_DIR: str = "data/laps"
 RESULTS_DIR: str = "data/results"
 CHECKPOINT_PATH: str = "f1_model.pt"  # PyTorch convention (.pt or .pth)
+SCALERS_PATH: str = "scalers.pkl"     # the fitted StandardScalers — needed at inference
+
+
+# =============================================================================
+# 7. TRAIN / VALIDATION / TEST SPLIT
+# =============================================================================
+
+TRAIN_SET: list = range(2018, 2024)
+VAL_SET: list = [2024]
+TEST_SET: list = [2025]
