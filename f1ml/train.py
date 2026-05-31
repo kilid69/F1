@@ -188,14 +188,18 @@ def train():
         # log the knobs that DEFINE this run, so later you can see which settings
         # produced which result and compare runs side by side in the MLflow UI.
         mlflow.log_params({
+            "num_past_races": config.NUM_PAST_RACES,
             "batch_size": config.BATCH_SIZE,
             "learning_rate": config.LEARNING_RATE,
             "weight_decay": config.WEIGHT_DECAY,
             "dropout": config.DROPOUT,
             "patience": config.PATIENCE,
             "num_epochs": config.NUM_EPOCHS,
+            "embedding_sizes": config.EMBEDDING_SIZES,
             "inner_lstm_hidden": config.INNER_LSTM_HIDDEN,
             "outer_lstm_hidden": config.OUTER_LSTM_HIDDEN,
+            "head_hidden": config.HEAD_HIDDEN,
+            "train_set": config.TRAIN_SET
         })
 
         best_val = float("inf")     # lowest val_loss we've seen so far
