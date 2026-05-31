@@ -146,6 +146,7 @@ def predict_race(year: int, round_number: int):
     print(f"Prediction for {year} round {round_number}  "
           f"({len(matches)} drivers with enough history):")
     print(f"  {'driver':>6}  {'model top-3 (confidence)':<34}  actual")
+    acc = []
     for ds, i in matches:
         rec = ds.samples[i]
         driver = ID_TO_DRIVER.get(rec["driver"], f"id{rec['driver']}")
@@ -159,6 +160,10 @@ def predict_race(year: int, round_number: int):
         )
         actual = class_to_label(int(rec["target"]))  # recipe stores the int target
         print(f"  {driver:>6}  {guesses:<34}  {actual}")
+        
+        # Calculating the accuracy
+        acc.append(1 if actual in [class_to_label(int(c)) for c in top_c] else 0)
+    print(f"\nAccuracy of prediction: {round(sum(acc) / len(acc), 2)}")
 
 
 if __name__ == "__main__":
