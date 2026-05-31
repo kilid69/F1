@@ -147,6 +147,7 @@ def predict_race(year: int, round_number: int):
           f"({len(matches)} drivers with enough history):")
     print(f"  {'driver':>6}  {'model top-3 (confidence)':<34}  actual")
     acc = []
+    acc_top_10 = []
     for ds, i in matches:
         rec = ds.samples[i]
         driver = ID_TO_DRIVER.get(rec["driver"], f"id{rec['driver']}")
@@ -163,7 +164,11 @@ def predict_race(year: int, round_number: int):
         
         # Calculating the accuracy
         acc.append(1 if actual in [class_to_label(int(c)) for c in top_c] else 0)
+        # calculating the accuracy for top 10 Drivers. more useful measurement.
+        if int(rec["target"]) <= 9:
+            acc_top_10.append(1 if actual in [class_to_label(int(c)) for c in top_c] else 0)
     print(f"\nAccuracy of prediction: {round(sum(acc) / len(acc), 2)}")
+    print(f"\nAccuracy of prediction (top 10 drivers): {round(sum(acc_top_10) / len(acc_top_10), 2)}")
 
 
 if __name__ == "__main__":
