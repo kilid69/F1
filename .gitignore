@@ -26,6 +26,9 @@ env/
 *.pth
 *.pkl
 
+# --- MLflow experiment tracking (local run history + artifact copies) ---
+mlruns/
+
 # --- FastF1 download cache (if it ever lands in the project) ---
 cache/
 *_cache/
@@ -33,4 +36,4 @@ docs/
 
 # --- Markdown: ignore notes, but keep the project readme ---
 *.md
-!readme.md
+!README.md
