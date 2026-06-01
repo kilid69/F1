@@ -18,6 +18,8 @@ positions. The map is:
 Run with:  python -m f1ml.predict
 """
 
+import mlflow
+import mlflow.pytorch
 import torch
 from torch.utils.data import DataLoader
 
@@ -58,8 +60,14 @@ def load_model(device):
     return model
 
 
+def load_model_from_run(run_id, device):
+    """Load a model logged in a past MLflow run (rebuilds its own architecture)."""
+    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    return mlflow.pytorch.load_model(f"runs:/{run_id}/model").to(device).eval()
+
+
 @torch.no_grad()   # no gradients anywhere in here — we are only predicting
-def predict():
+def predict(run_id=None):
     device = ("cuda" if torch.cuda.is_available()
               else "mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -69,7 +77,7 @@ def predict():
     _train, _val, test_ds, _lap_sc, _up_sc = dataset.build_datasets(
         config.TRAIN_SET, config.VAL_SET, config.TEST_SET)
 
-    model = load_model(device)
+    model = load_model_from_run(run_id, device) if run_id else load_model(device)
     criterion = torch.nn.CrossEntropyLoss()
 
     # ---- 1. score the whole 2025 test set ----
@@ -105,7 +113,7 @@ def predict():
 
 
 @torch.no_grad()
-def predict_race(year: int, round_number: int):
+def predict_race(year: int, round_number: int, run_id=None):
     """Predict EVERY driver's finishing position for one specific race.
 
     A race is many samples — one per driver who lined up with at least 10 prior
@@ -127,7 +135,7 @@ def predict_race(year: int, round_number: int):
     # Build the splits (gives train-fit scaling) and load the trained weights.
     train_ds, val_ds, test_ds, _lap_sc, _up_sc = dataset.build_datasets(
         config.TRAIN_SET, config.VAL_SET, config.TEST_SET)
-    model = load_model(device)
+    model = load_model_from_run(run_id, device) if run_id else load_model(device)
 
     # A given year lives in exactly ONE split (train/val/test), but we don't need
     # to care which — just scan all three for samples whose TARGET race matches.
@@ -174,9 +182,16 @@ def predict_race(year: int, round_number: int):
 if __name__ == "__main__":
     import sys
 
-    # No args  -> score the whole 2025 test set + a few sample predictions.
-    # Two args -> predict ONE race, e.g.:  python -m f1ml.predict 2025 5
-    if len(sys.argv) == 3:
-        predict_race(int(sys.argv[1]), int(sys.argv[2]))
+    # optional "--run <id>" picks a past MLflow run instead of the local model
+    args = sys.argv[1:]
+    run_id = None
+    if "--run" in args:
+        i = args.index("--run")
+        run_id = args[i + 1]
+        args = args[:i] + args[i + 2:]   # strip "--run" and its value
+
+    # no race args -> score the test set;  "<year> <round>" -> predict one race
+    if len(args) == 2:
+        predict_race(int(args[0]), int(args[1]), run_id=run_id)
     else:
-        predict()
+        predict(run_id=run_id)
