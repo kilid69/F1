@@ -14,6 +14,7 @@ Run this file directly to train:  python -m f1ml.train
 import pickle
 
 import mlflow
+import mlflow.pytorch
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -238,13 +239,11 @@ def train():
                           f"(best val_loss={best_val:.4f})")
                     break
 
-        # ---- 5. archive this run's best model + its scalers in MLflow ----
-        # f1_model.pt currently holds the BEST epoch's weights (we only saved on
-        # improvement). Log it + the scalers as artifacts so MLflow keeps a
-        # versioned copy of THIS run, safe even after the next run overwrites the
-        # working-dir files. best_val becomes the run's headline metric.
+        # ---- 5. log this run's best model (structure + weights) + scalers ----
+        # reload the best epoch (model otherwise holds the LAST epoch's weights)
+        model.load_state_dict(torch.load(config.CHECKPOINT_PATH, map_location=device))
+        mlflow.pytorch.log_model(model, name="model")   # self-loadable via runs:/<id>/model
         mlflow.log_metric("best_val_loss", best_val)
-        mlflow.log_artifact(config.CHECKPOINT_PATH)
         mlflow.log_artifact(config.SCALERS_PATH)
 
 
