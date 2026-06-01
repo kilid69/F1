@@ -19,6 +19,8 @@ env/
 
 # --- Generated data files (re-made by running the pipeline) ---
 *.csv
+*.excalidraw
+model_structure.png
 
 # --- Generated model / scaler files ---
 *.keras
@@ -28,6 +30,7 @@ env/
 
 # --- MLflow experiment tracking (local run history + artifact copies) ---
 mlruns/
+mlflow.db
 
 # --- FastF1 download cache (if it ever lands in the project) ---
 cache/
